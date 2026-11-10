@@ -28,3 +28,12 @@ all retained editions. Frogmouth and its `fantasy` launcher remain available.
 The source is retained for future changes, but the initial trial does not modify
 upstream application code. No unit tests or synthetic probes are run; validation
 uses release compilation and the actual Fantasy collection on Icarus.
+
+## Installed and checked November 10, 2026
+
+The optimized native build finished successfully in 202m40s. `fantasy-mdt` is
+installed in ~/.local/bin and reports mdt 0.11.2. In a separate tmux session on
+Icarus, the real collection opened, link selection reached Ice Cold Batou, `e`
+opened its file in Nano, Ctrl+X returned to the reader, and `b` returned home.
+No dossier content was changed. Physical-console images and jfbview integration
+remain unverified; this is the upstream image implementation.
