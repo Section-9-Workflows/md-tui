@@ -1,0 +1,4 @@
+#!/bin/sh
+cd "$HOME/Fantasy/current" || exit 1
+export EDITOR=nano
+exec "$HOME/tarballs/md-tui/target/release/mdt" README.md

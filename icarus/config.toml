@@ -1,0 +1,10 @@
+# High contrast for Icarus's console; change with T in the reader.
+h_fg_color = "black"
+h_bg_color = "yellow"
+link_color = "lightcyan"
+link_selected_fg_color = "black"
+link_selected_bg_color = "yellow"
+file_tree_name_color = "white"
+file_tree_path_color = "lightcyan"
+file_tree_selected_fg_color = "yellow"
+document_header = true
