@@ -76,6 +76,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn run_app(terminal: &mut DefaultTerminal, mut app: App, tick_rate: Duration) -> io::Result<()> {
+    // FbTerm ignores alternate-screen entry, so clear the actual display explicitly.
+    terminal.clear()?;
+
     let (f_tx, f_rx) = mpsc::channel::<Option<MdFile>>();
 
     thread::spawn(move || find_md_files_channel(f_tx.clone()));
@@ -293,6 +296,7 @@ fn run_app(terminal: &mut DefaultTerminal, mut app: App, tick_rate: Duration) ->
                     terminal.draw(|f| {
                         open_editor(f, &mut app, markdown.file_name(), source_line);
                     })?;
+                    terminal.clear()?;
                 }
                 KeyBoardAction::ThemeChanged => {
                     let text = markdown
