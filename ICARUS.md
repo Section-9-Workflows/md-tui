@@ -16,9 +16,12 @@ this 32-bit, 2 GB laptop. This remains an optimized release build. Optional netw
 image fetching and programming-language grammar packs are disabled for this offline
 reading trial. Local image rendering remains upstream's implementation, not jfbview.
 
-Run `fantasy-mdt` after installation. It starts inside ~/Fantasy/current so the
+Run `fantasy` or `fantasy-mdt` after installation. Both use ~/.local/bin/mdt.
+The Depot binary is stored by source revision under ~/.local/lib/md-tui/,
+with ~/.local/bin/mdt pointing to that version. See docs/DEPOT.md for the build.
+The launcher starts inside ~/Fantasy/current so the
 file index only covers the current collection, not the whole home directory or
-all retained editions. Frogmouth and its `fantasy` launcher remain available.
+all retained editions. The original Frogmouth executable and source remain available.
 
 - s: select links, then arrows to choose and Enter to follow.
 - b: back to the previous document.
