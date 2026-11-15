@@ -547,9 +547,9 @@ fn render_path_header(f: &mut Frame, x: u16, width: u16, label: &str) {
 
 fn help_background_area(document_area: Rect, screen_height: u16, expanded: bool) -> Rect {
     // When expanded: one row above the keys for the annotation status, one below them.
-    let height = if expanded { MARKDOWN_HELP_ROWS + 2 } else { 3 };
+    let height = if expanded { MARKDOWN_HELP_ROWS + 2 } else { 1 };
     Rect {
-        y: screen_height.saturating_sub(height + 1),
+        y: screen_height.saturating_sub(height + u16::from(expanded)),
         height: cmp::min(height, screen_height),
         x: document_area.x,
         width: document_area.width,
@@ -576,7 +576,7 @@ fn render_markdown(f: &mut Frame, app: &App, markdown: &mut ComponentRoot) {
     let area = Rect {
         width: cmp::min(app.width() - 3, size.width - 1),
         height: if GENERAL_CONFIG.help_menu {
-            size.height.saturating_sub(5 + header_height)
+            size.height.saturating_sub(1 + header_height)
         } else {
             size.height.saturating_sub(header_height)
         },
@@ -680,8 +680,8 @@ fn render_markdown(f: &mut Frame, app: &App, markdown: &mut ComponentRoot) {
     } else {
         Rect {
             x: x + 2,
-            y: size.height.saturating_sub(3),
-            height: cmp::min(3, size.height),
+            y: size.height.saturating_sub(1),
+            height: cmp::min(1, size.height),
             width: app.width() - 5,
         }
     };
@@ -890,7 +890,7 @@ mod tests {
         let screen = Rect::new(0, 0, 8, 6);
         let document = Rect::new(2, 0, 5, 6);
 
-        for (expanded, row) in [(true, 1), (false, 3)] {
+        for (expanded, row) in [(true, 1), (false, 5)] {
             let mut buffer = ratatui::buffer::Buffer::empty(screen);
             buffer[(6, row)].set_symbol("Z");
             buffer[(7, row)].set_symbol("│");
