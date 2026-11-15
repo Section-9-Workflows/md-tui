@@ -640,6 +640,7 @@ fn keyboard_mode_view(
                         let _ = open::that(url);
                     }
                     LinkType::MarkdownFile(url) => {
+                        let root_relative = url.starts_with('/');
                         // Remove the first character, which is a '/'
                         let url = if let Some(url) = url.strip_prefix('/') {
                             url
@@ -657,6 +658,16 @@ fn keyboard_mode_view(
                             url
                         } else {
                             format!("{url}.md")
+                        };
+
+                        let url = match markdown
+                            .file_name()
+                            .and_then(|name| std::path::Path::new(name).parent())
+                        {
+                            Some(parent) if !root_relative => {
+                                parent.join(url).to_string_lossy().into_owned()
+                            }
+                            _ => url,
                         };
 
                         let text = if let Ok(file) = read_to_string(&url) {
