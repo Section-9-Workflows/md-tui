@@ -1,0 +1,35 @@
+# Rust 1.100.0, Debian Bookworm, official linux/386 image.
+FROM docker.io/library/rust@sha256:5f5d8587b6bfce6022f4530d5960b62988d5819435d002e1760b1c2cd5dcd6f2 AS build
+RUN apt-get update && apt-get install -y --no-install-recommends musl-tools binutils \
+    && rm -rf /var/lib/apt/lists/* \
+    && rustup target add i686-unknown-linux-musl
+ENV CARGO_TARGET_I686_UNKNOWN_LINUX_MUSL_LINKER=musl-gcc \
+    CC_i686_unknown_linux_musl=musl-gcc \
+    CFLAGS_i686_unknown_linux_musl="-march=bonnell -mtune=bonnell" \
+    CARGO_TARGET_I686_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-C target-cpu=bonnell" \
+    CARGO_PROFILE_RELEASE_LTO=false \
+    CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16
+WORKDIR /source
+COPY . .
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    cargo fetch --locked --target i686-unknown-linux-musl
+ARG SOURCE_REVISION
+RUN --network=none --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/source/target \
+    cargo build --release --locked --offline --no-default-features --target i686-unknown-linux-musl \
+    && mkdir /artifacts \
+    && cp target/i686-unknown-linux-musl/release/mdt /artifacts/ \
+    && readelf -h /artifacts/mdt > /artifacts/elf-header.txt \
+    && readelf -l /artifacts/mdt > /artifacts/elf-segments.txt \
+    && ! grep -q INTERP /artifacts/elf-segments.txt
+RUN test -n "$SOURCE_REVISION" \
+    && printf '%s\n' "$SOURCE_REVISION" > /artifacts/source-revision.txt \
+    && rustc -vV > /artifacts/rustc-version.txt \
+    && dpkg-query -W > /artifacts/build-packages.tsv \
+    && cp LICENSE /artifacts/ \
+    && tar -czf /artifacts/source.tar.gz --exclude=./.git --exclude=./target -C /source . \
+    && cd /artifacts && sha256sum * > SHA256SUMS
+FROM scratch AS artifacts
+ARG SOURCE_REVISION
+LABEL org.opencontainers.image.revision=$SOURCE_REVISION
+COPY --from=build /artifacts/ /
