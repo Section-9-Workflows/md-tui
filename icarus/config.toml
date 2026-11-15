@@ -8,3 +8,7 @@ file_tree_name_color = "white"
 file_tree_path_color = "lightcyan"
 file_tree_selected_fg_color = "yellow"
 document_header = true
+# Use palette colors: FbTerm does not map RGB gray to a gray palette entry.
+code_fg_color = "white"
+code_bg_color = "black"
+code_block_bg_color = "black"
